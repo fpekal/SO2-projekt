@@ -1,5 +1,7 @@
 #include <iostream>
+#include "problem.h"
+#include "printer.h"
 
 int main() {
-	std::cout << "Hello, World!\n";
+	Problem p { 3 };
 }
