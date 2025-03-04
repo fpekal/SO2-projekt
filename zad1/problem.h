@@ -4,13 +4,14 @@
 #include <mutex>
 #include <memory>
 #include <condition_variable>
+#include <atomic>
 
 #include "printer.h"
 
 class Problem {
 public:
 	Problem(int phil_num) :
-		phil_num{ phil_num }, fork_num{ phil_num }, arbiter{ phil_num - 1 } {
+		phil_num{ phil_num }, fork_num{ phil_num }, arbiter{ phil_num - 1 }, running{ true } {
 
 		for (int i = 0; i < fork_num; i++) {
 			forks.push_back(std::make_shared<std::mutex>());
@@ -22,6 +23,8 @@ public:
 	}
 	
 	~Problem() {
+		running = false;
+
 		for (int i = 0; i < phil_num; i++) {
 			philosophers[i].join();
 		}
@@ -39,12 +42,14 @@ public:
 
 	Printer p;
 
+	std::atomic<bool> running;
+
 private:
 	static void run_philosopher(Problem* problem, int index) {
 		auto left_fork = problem->forks[index];
 		auto right_fork = problem->forks[(index + 1) % problem->fork_num];
 
-		while (true) {
+		while (problem->running) {
 			problem->p << std::string{"Philosopher "} + std::to_string(index) + " tries to eat\n";
 			std::unique_lock<std::mutex> guard(*left_fork, std::defer_lock);
 			std::unique_lock<std::mutex> guard2(*right_fork, std::defer_lock);
