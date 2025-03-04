@@ -5,18 +5,22 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }: {
-		apps =
-		let
-			pkgs = nixpkgs.legacyPackages.x86_64-linux;
-			package = pkgs.callPackage (import ./default.nix) {};
-		in {
-			x86_64-linux = {
-				default = {
-					type = "app";
-					program = "${package}/bin/zad1";
-				};
+  outputs = { self, nixpkgs }:
+	let
+		pkgs = nixpkgs.legacyPackages.x86_64-linux;
+	in
+	{
+		packages.x86_64-linux = {
+			zad1 = pkgs.callPackage ./default.nix {};
+			default = self.packages.x86_64-linux.zad1;
+		};
+
+		apps.x86_64-linux = {
+			zad1 = {
+				type = "app";
+				program = "${self.packages.x86_64-linux.zad1}/bin/zad1";
 			};
+			default = self.apps.x86_64-linux.zad1;
 		};
   };
 }

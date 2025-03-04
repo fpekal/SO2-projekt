@@ -1,7 +1,7 @@
-{ pkgs, gnumake, gcc }:
+{ pkgs }:
 pkgs.stdenv.mkDerivation {
 	name = "zad1";
-	version = "0.1";
+	version = "1.0";
 
 	src = ./.;
 }
