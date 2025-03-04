@@ -58,37 +58,37 @@ public:
 	std::atomic<bool> running;
 
 private:
-	static void run_philosopher(Problem* problem, int index) {
+	void run_philosopher(int index) {
 		// Get neighboring forks
-		auto left_fork = problem->forks[index];
-		auto right_fork = problem->forks[(index + 1) % problem->fork_num];
+		auto left_fork = forks[index];
+		auto right_fork = forks[(index + 1) % fork_num];
 
-		while (problem->running) {
-			problem->p << std::string{"Philosopher "} + std::to_string(index) + " tries to eat\n";
+		while (running) {
+			p << std::string{"Philosopher "} + std::to_string(index) + " tries to eat\n";
 			// Create locks but don't lock them
 			std::unique_lock<std::mutex> guard(*left_fork, std::defer_lock);
 			std::unique_lock<std::mutex> guard2(*right_fork, std::defer_lock);
 
 			{
 				// Wait for arbitrator to allow the philosopher to eat
-				std::unique_lock<std::mutex> arbiter_guard(problem->arbiter_mutex);
-				problem->arbiter_cv.wait(arbiter_guard, [&] { return problem->arbiter > 0; });
-				problem->arbiter--;
+				std::unique_lock<std::mutex> arbiter_guard(arbiter_mutex);
+				arbiter_cv.wait(arbiter_guard, [&] { return arbiter > 0; });
+				arbiter--;
 				arbiter_guard.unlock();
 
 				// Take forks and eat for some time
-				problem->p << std::string{"Philosopher "} + std::to_string(index) + " is eating\n";
+				p << std::string{"Philosopher "} + std::to_string(index) + " is eating\n";
 				guard.lock();
 				guard2.lock();
 				std::this_thread::sleep_for(std::chrono::milliseconds(std::rand() % 500 + 500));
 				guard2.unlock();
 				guard.unlock();
-				problem->p << std::string{"Philosopher "} + std::to_string(index) + " is no longer eating\n";
+				p << std::string{"Philosopher "} + std::to_string(index) + " is no longer eating\n";
 
 				// Return the slot and notify other philosophers that there is a new slot for them
 				arbiter_guard.lock();
-				problem->arbiter++;
-				problem->arbiter_cv.notify_one();
+				arbiter++;
+				arbiter_cv.notify_one();
 				arbiter_guard.unlock();
 
 				// Think
