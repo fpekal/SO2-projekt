@@ -11,6 +11,7 @@ int main(int argc, char* argv[]) {
 	int n = std::stoi(argv[1]);
 	Problem p { n };
 
+	// Let philosophers work for 10 seconds
 	std::this_thread::sleep_for(std::chrono::seconds(10));
 	return 0;
 }

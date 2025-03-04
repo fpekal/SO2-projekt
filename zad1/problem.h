@@ -48,10 +48,10 @@ public:
 	int arbiter;
 	std::mutex arbiter_mutex;
 
-	// Notifies philosophers that there is a new slot for new philosopher to eat
+	// Notifies philosophers that there is a new slot for a new philosopher to eat
 	std::condition_variable arbiter_cv;
 
-	// Thread-Safe printing to console
+	// Thread-Safe printing to the console
 	Printer p;
 
 	// Is the problem still running
@@ -70,7 +70,7 @@ private:
 			std::unique_lock<std::mutex> guard2(*right_fork, std::defer_lock);
 
 			{
-				// Wait for arbitrator to allow philosopher to eat
+				// Wait for arbitrator to allow the philosopher to eat
 				std::unique_lock<std::mutex> arbiter_guard(problem->arbiter_mutex);
 				problem->arbiter_cv.wait(arbiter_guard, [&] { return problem->arbiter > 0; });
 				problem->arbiter--;
@@ -85,7 +85,7 @@ private:
 				guard.unlock();
 				problem->p << std::string{"Philosopher "} + std::to_string(index) + " is no longer eating\n";
 
-				// Return slot and notify other philosophers that there is a new slot for them
+				// Return the slot and notify other philosophers that there is a new slot for them
 				arbiter_guard.lock();
 				problem->arbiter++;
 				problem->arbiter_cv.notify_one();
