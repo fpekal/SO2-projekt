@@ -81,8 +81,8 @@ private:
 				guard.lock();
 				guard2.lock();
 				std::this_thread::sleep_for(std::chrono::milliseconds(std::rand() % 500 + 500));
-				guard.unlock();
 				guard2.unlock();
+				guard.unlock();
 				problem->p << std::string{"Philosopher "} + std::to_string(index) + " is no longer eating\n";
 
 				// Return slot and notify other philosophers that there is a new slot for them
