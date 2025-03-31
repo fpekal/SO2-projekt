@@ -19,7 +19,8 @@
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "zad1": "zad1"
+        "zad1": "zad1",
+        "zad2": "zad2"
       }
     },
     "zad1": {
@@ -30,12 +31,29 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-FNghWBDyL3oFpBq4YNpHL2mLrrRXP9OM/Lg1EiwLsXA=",
+        "narHash": "sha256-Y2kMXCy1JQ9V/zjTU+ULQ9ZuvAeavzBmtcv4Wg7WiQ4=",
         "path": "./zad1",
         "type": "path"
       },
       "original": {
         "path": "./zad1",
+        "type": "path"
+      }
+    },
+    "zad2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1,
+        "narHash": "sha256-lkZYlizdbDdbF4iv55b45dEQkwx/GMrmhWzshg9BNF0=",
+        "path": "./zad2",
+        "type": "path"
+      },
+      "original": {
+        "path": "./zad2",
         "type": "path"
       }
     }
