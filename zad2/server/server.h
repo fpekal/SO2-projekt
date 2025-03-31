@@ -1,7 +1,6 @@
 #pragma once
 #include <cassert>
 #include <functional>
-#include <iostream>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <thread>
