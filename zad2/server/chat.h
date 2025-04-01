@@ -20,7 +20,7 @@
  */
 class Client {
 public:
-  /** @fn Client::Client()
+  /**
    * @brief Construct a Client object connected to the `fd` socket.
    *
    * @param fd Socket where the client is connected.
@@ -108,7 +108,7 @@ private:
  */
 class Chat {
 public:
-  /** @fn Chat:Chat()
+  /**
    * @brief Construct a `Chat` object.
    *
    * Initializes a `server` member with `Chat::client_handler`.

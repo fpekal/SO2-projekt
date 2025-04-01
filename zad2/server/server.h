@@ -15,7 +15,7 @@
  */
 class Server {
 public:
-  /** @fn Server::Server(std::function<void(int)> client_handler)
+  /**
    * @brief Setups a socket
    *
    * Creates an INET socket, binds it to `0.0.0.0:2137` and starts listening
