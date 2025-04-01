@@ -7,8 +7,24 @@
 #include <unistd.h>
 #include <vector>
 
+/** @class Server
+ * @brief A TCP server
+ *
+ * Starts a TCP server that listens on port 2137. When a client connects its
+ * socket is handed to the `client_handler`, that will run on a separate thread.
+ */
 class Server {
 public:
+  /** @fn Server::server(std::function<void(int)> client_handler)
+   * @brief Setups a socket
+   *
+   * Creates an INET socket, binds it to `0.0.0.0:2137` and starts listening
+   * for maximum of 127 clients.
+   *
+   * @param client_handler Function responsible for communicating with a client.
+   * It takes an `int` argument that is an socket of a client. This function
+   * should close the socket when returning.
+   */
   Server(std::function<void(int)> client_handler)
       : client_handler{client_handler} {
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -36,6 +52,10 @@ public:
     }
   }
 
+  /** @fn Server::~Server()
+   *
+   * Waits for all clients to end connections and closes a server socket.
+   */
   ~Server() {
     for (auto &thread : clients) {
       thread.join();
@@ -44,6 +64,11 @@ public:
     close(server_fd);
   }
 
+  /** @fn void Server::accept_connection()
+   *
+   * Accept one new connection.
+   * Run a new thread for this connection with `client_handler`.
+   */
   void accept_connection() {
     int client_fd = accept(server_fd, NULL, 0);
     assert(client_fd != -1);
