@@ -23,15 +23,22 @@ public:
   }
 
   std::string receive() {
-    char buf[1024];
+    std::string message;
 
-    int len = read(fd, buf, 1023);
-    if (len == 0)
-      throw std::runtime_error{"Client disconnected"};
+    while (true) {
+      char buf[1024];
+      int len = read(fd, buf, 1023);
+      if (len <= 0)
+        throw std::runtime_error{"Client disconnected"};
 
-    buf[len + 1] = 0;
+      buf[len] = 0;
+      message += buf;
 
-    return buf;
+      if (len < 1023)
+        break;
+    }
+
+    return message;
   }
 
 private:
