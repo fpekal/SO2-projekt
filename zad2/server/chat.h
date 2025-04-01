@@ -97,11 +97,31 @@ private:
   int fd;
 };
 
+/** @class Chat
+ * @brief A chat server with only one channel and no security whatsoever.
+ *
+ * It's a wrapper around a `Server` class.
+ * When a client connects to the server, it sends him the whole message history
+ * and adds him to the list of connected clients. When a client sends a message,
+ * server receives it and broadcast it to all clients, including the one that
+ * sent it in the first place.
+ */
 class Chat {
 public:
+  /** @fn Chat:Chat()
+   * @brief Construct a `Chat` object.
+   *
+   * Initializes a `server` member with `Chat::client_handler`.
+   */
   Chat()
       : server{std::bind(&Chat::client_handler, this, std::placeholders::_1)} {}
 
+  /** @fn void Chat::run()
+   * @brief Start accepting clients.
+   *
+   * Blocking function. It enters an infinite loop and accepts all pending
+   * connections to the server.
+   */
   void run() {
     while (true) {
       server.accept_connection();
@@ -109,6 +129,13 @@ public:
   }
 
 private:
+  /** @fn void Chat::client_handler(int fd)
+   * @brief Handles an entire connection with a client.
+   *
+   * Adds and removes a client from a list of all clients.
+   * Firstly, it sends a client all of the chat history and then it listens for
+   * client's messages and broadcast them.
+   */
   void client_handler(int fd) {
     auto client = add_client(fd);
 
@@ -130,14 +157,28 @@ private:
     remove_client(client);
   }
 
+  /** @var Server Chat::server
+   * @brief TCP server on which the chat server is based.
+   */
   Server server;
 
+  /** @fn std::string Chat::get_history()
+   * @brief Get whole chat history
+   *
+   * It's thread-safe.
+   */
   std::string get_history() {
     std::unique_lock<std::mutex> lock{history_mutex};
 
     return history;
   }
 
+  /** @fn void Chat::add_history(const std::string &message)
+   * @brief Add a message to the history
+   *
+   * It's thread-safe.
+   * The message is stripped from its last character, that is newline character.
+   */
   void add_history(const std::string &message) {
     std::unique_lock<std::mutex> lock{history_mutex};
 
@@ -145,6 +186,13 @@ private:
     history += "\n";
   }
 
+  /** @fn std::shared_ptr<Client> Chat::add_client(int fd)
+   * @brief Add a client to the list of all clients.
+   *
+   * It's thread-safe.
+   *
+   * @return shared_ptr to the newly created `Client` object.
+   */
   std::shared_ptr<Client> add_client(int fd) {
     auto client = std::make_shared<Client>(fd);
 
@@ -153,12 +201,23 @@ private:
     return client;
   }
 
+  /** @fn void Chat::remove_client(std::shared_ptr<Client> client)
+   * @brief Removes the client from a list of all clients.
+   *
+   * It's thread-safe.
+   * When there is no such client, no error is returned;
+   */
   void remove_client(std::shared_ptr<Client> client) {
     std::unique_lock<std::mutex> lock{clients_mutex};
     auto iter = std::find(clients.begin(), clients.end(), client);
     clients.erase(iter);
   }
 
+  /** @fn void Chat::send_to_all(const std::string &message)
+   * @brief Sends a message to all clients in the list.
+   *
+   * It's thread-safe.
+   */
   void send_to_all(const std::string &message) {
     std::unique_lock<std::mutex> lock{clients_mutex};
 
@@ -167,9 +226,24 @@ private:
     }
   }
 
+  /** @var std::mutex Chat::history_mutex
+   * @brief Locks an access to the `history` member.
+   */
   std::mutex history_mutex;
+  /** @var std::string Chat::history
+   * @brief All messages that were sent through a server.
+   */
   std::string history;
 
+  /** @var std::mutex Chat::clients_mutex
+   * @brief Locks an access to the `clients` list.
+   */
   std::mutex clients_mutex;
+  /** @var std::vector<std::shared_ptr<Client>> Chat::clients
+   * @brief Stores a list of all clients connected to the server at the moment.
+   *
+   * Using `send_to_all` function sends a message to all clients inside of this
+   * list.
+   */
   std::vector<std::shared_ptr<Client>> clients;
 };
