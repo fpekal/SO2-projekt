@@ -28,7 +28,7 @@ public:
     }
   }
 
-  /**
+  /** @fn std::string Client::receive()
    * @brief Receives a message from the client.
    *
    * Reads up to 1023 bytes from the socket `fd` into the member
