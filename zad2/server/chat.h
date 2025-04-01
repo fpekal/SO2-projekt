@@ -13,12 +13,33 @@
  *
  * Class allowing for sending and receiving messages from the clients.
  * Closes file descriptor when the destructor is called.
+ *
+ * Messages are just ASCII-encoded strings containing both nickname and a
+ * "message" from this client. So you can send many messages at once by just
+ * concatenating them and separating with new line character (`\n`)
  */
 class Client {
 public:
+  /** @fn Client::Client()
+   * @brief Construct a Client object connected to the `fd` socket.
+   *
+   * @param fd Socket where the client is connected.
+   */
   Client(int fd) : fd{fd} {}
   ~Client() { close(fd); }
 
+  /** @fn void Client::send(const std::string &message)
+   * @brief Sends a message(s) to the client.
+   *
+   * It takes a message and sends it by using `write()`.
+   * Additionaly it locks a mutex so only one thread can send messages to the
+   * client at a time. It is needed because there was a possibility of sending
+   * malformed messages.
+   *
+   * @param message The string data to be transmitted to the client.
+   * @throws std::runtime_error if an error occurs during `write()`. It is
+   * assumed that the client has disconnected from the server.
+   */
   void send(const std::string &message) {
     std::unique_lock<std::mutex> lock{send_mutex};
 
@@ -66,7 +87,13 @@ public:
   }
 
 private:
+  /** @var std::mutex Client::send_mutex
+   * @brief Locks an access to sending messages to the client.
+   */
   std::mutex send_mutex;
+  /** @var int Client::fd
+   * @brief File descriptor of a socket where client is connected.
+   */
   int fd;
 };
 
