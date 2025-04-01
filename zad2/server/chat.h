@@ -11,7 +11,7 @@
 /** @class Client
  * @brief Chat client
  *
- * Class allowing for sending and receiving messages from clients.
+ * Class allowing for sending and receiving messages from the clients.
  * Closes file descriptor when the destructor is called.
  */
 class Client {
@@ -28,6 +28,24 @@ public:
     }
   }
 
+  /**
+   * @brief Receives a message from the client.
+   *
+   * Reads up to 1023 bytes from the socket `fd` into the member
+   * buffer. The received data in the buffer is null-terminated.
+   * Then it is added to the return message.
+   * Everything repeats until the whole message is received and then the message
+   * is returned.
+   *
+   * @return std::string containing the message read from the socket.
+   * @throws std::runtime_error if an error occurs during the read system call
+   * (read returns -1). It is assumed that the client disconnected from the
+   * server.
+   * @warning If client sends exactly `N*1024+1023` characters then this
+   * function will block until the next message and only then this message will
+   * be received correctly. I don't want to think about how to fix this; it's
+   * not the subject of this project.
+   */
   std::string receive() {
     std::string message;
 
