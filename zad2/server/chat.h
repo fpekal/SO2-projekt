@@ -8,6 +8,12 @@
 
 #include "server.h"
 
+/** @class Client
+ * @brief Chat client
+ *
+ * Class allowing for sending and receiving messages from clients.
+ * Closes file descriptor when the destructor is called.
+ */
 class Client {
 public:
   Client(int fd) : fd{fd} {}
