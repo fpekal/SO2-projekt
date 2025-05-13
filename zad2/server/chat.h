@@ -3,6 +3,7 @@
 #include <functional>
 #include <memory>
 #include <mutex>
+#include <signal.h>
 #include <stdexcept>
 #include <string>
 
@@ -114,7 +115,9 @@ public:
    * Initializes a `server` member with `Chat::client_handler`.
    */
   Chat()
-      : server{std::bind(&Chat::client_handler, this, std::placeholders::_1)} {}
+      : server{std::bind(&Chat::client_handler, this, std::placeholders::_1)} {
+    signal(SIGPIPE, SIG_IGN); // Make sure the process won't crash
+  }
 
   /** @fn void Chat::run()
    * @brief Start accepting clients.
