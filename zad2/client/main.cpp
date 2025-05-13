@@ -69,7 +69,9 @@ void receiver_thread_func(Client &c, std::atomic<bool> &running) {
 }
 
 int main(int argc, char *argv[]) {
-  Client c{2137, "127.0.0.1"};
+  int port = DEFAULT_PORT;
+  std::string address = DEFAULT_ADDRESS;
+
   std::atomic<bool> running = true;
   Client c{port, address};
   c.connect();
