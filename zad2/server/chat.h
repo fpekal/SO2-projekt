@@ -171,7 +171,7 @@ private:
 
     while (true) {
       try {
-        auto new_message = client->receive();
+        auto new_message = trim(client->receive()) + "\n";
 
         add_history(new_message);
 
