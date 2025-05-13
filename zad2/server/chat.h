@@ -9,6 +9,30 @@
 
 #include "server.h"
 
+// Trim from start (in-place)
+static std::string ltrim(std::string s) {
+  s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+            return !std::isspace(ch);
+          }));
+  return s;
+}
+
+// Trim from end (in-place)
+static std::string rtrim(std::string s) {
+  s.erase(std::find_if(s.rbegin(), s.rend(),
+                       [](unsigned char ch) { return !std::isspace(ch); })
+              .base(),
+          s.end());
+
+  return s;
+}
+
+// Trim from both ends (in-place)
+static std::string trim(std::string s) {
+  s = ltrim(s);
+  return rtrim(s);
+}
+
 /** @class Client
  * @brief Chat client
  *
@@ -185,7 +209,7 @@ private:
   void add_history(const std::string &message) {
     std::unique_lock<std::mutex> lock{history_mutex};
 
-    history += message.substr(0, message.length() - 2);
+    history += trim(message);
     history += "\n";
   }
 
