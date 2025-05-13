@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <netinet/in.h>
+#include <string>
 #include <sys/socket.h>
 #include <thread>
 #include <vector>
@@ -83,7 +84,11 @@ int main(int argc, char *argv[]) {
   std::thread receiver_thread{receiver_thread_func, std::ref(c),
                               std::ref(running)};
 
-  c.send(std::string{"<"} + nickname + "> elo");
+  while (running) {
+    std::string message;
+    std::getline(std::cin, message);
+    c.send(std::string{"<"} + nickname + "> " + message);
+  }
 
   receiver_thread.join();
   return 0;
