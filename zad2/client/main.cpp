@@ -72,6 +72,10 @@ int main(int argc, char *argv[]) {
   int port = DEFAULT_PORT;
   std::string address = DEFAULT_ADDRESS;
 
+  std::string nickname = "";
+  std::cout << "Enter your nickname: ";
+  std::cin >> nickname;
+
   std::atomic<bool> running = true;
   Client c{port, address};
   c.connect();
@@ -79,7 +83,7 @@ int main(int argc, char *argv[]) {
   std::thread receiver_thread{receiver_thread_func, std::ref(c),
                               std::ref(running)};
 
-  c.send("elo\n");
+  c.send(std::string{"<"} + nickname + "> elo");
 
   receiver_thread.join();
   return 0;
