@@ -3,6 +3,7 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <vector>
 
 int DEFAULT_PORT = 2137;
 std::string DEFAULT_ADDRESS = "127.0.0.1";
@@ -32,6 +33,26 @@ public:
     ::send(fd, message.c_str(), message.length(), 0);
   }
 
+  std::string receive() {
+    std::string message;
+    std::vector<char> buffer;
+    buffer.resize(2048);
+
+    while (true) {
+      int num = ::recv(fd, buffer.data(), 2048, 0);
+
+      if (num <= 0)
+        break;
+
+      message.append(buffer.data(), num);
+
+      if (num < 2048)
+        break;
+    }
+
+    return message;
+  }
+
 private:
   int fd;
 
@@ -43,5 +64,6 @@ int main(int argc, char *argv[]) {
   Client c{2137, "127.0.0.1"};
   c.connect();
   c.send("elo\n");
+  std::cout << c.receive();
   return 0;
 }
