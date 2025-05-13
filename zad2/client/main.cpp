@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 
   std::string nickname = "";
   std::cout << "Enter your nickname: ";
-  std::cin >> nickname;
+  std::getline(std::cin, nickname);
 
   std::atomic<bool> running = true;
   Client c{port, address};
