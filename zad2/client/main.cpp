@@ -1,8 +1,10 @@
 #include <arpa/inet.h>
+#include <atomic>
 #include <cassert>
 #include <iostream>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <thread>
 #include <vector>
 
 int DEFAULT_PORT = 2137;
@@ -60,10 +62,23 @@ private:
   std::string address;
 };
 
+void receiver_thread_func(Client &c, std::atomic<bool> &running) {
+  while (running) {
+    std::cout << c.receive();
+  }
+}
+
 int main(int argc, char *argv[]) {
   Client c{2137, "127.0.0.1"};
+  std::atomic<bool> running = true;
+  Client c{port, address};
   c.connect();
+
+  std::thread receiver_thread{receiver_thread_func, std::ref(c),
+                              std::ref(running)};
+
   c.send("elo\n");
-  std::cout << c.receive();
+
+  receiver_thread.join();
   return 0;
 }
