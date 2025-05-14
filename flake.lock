@@ -32,11 +32,11 @@
       "locked": {
         "lastModified": 1,
         "narHash": "sha256-Y2kMXCy1JQ9V/zjTU+ULQ9ZuvAeavzBmtcv4Wg7WiQ4=",
-        "path": "./zad1",
+        "path": "zad1",
         "type": "path"
       },
       "original": {
-        "path": "./zad1",
+        "path": "zad1",
         "type": "path"
       }
     },
@@ -48,12 +48,12 @@
       },
       "locked": {
         "lastModified": 1,
-        "narHash": "sha256-lkZYlizdbDdbF4iv55b45dEQkwx/GMrmhWzshg9BNF0=",
-        "path": "./zad2",
+        "narHash": "sha256-Flbn+AdA2JoTt4XG635AV2BEq2UjOX7q6LHQDuim2xs=",
+        "path": "zad2",
         "type": "path"
       },
       "original": {
-        "path": "./zad2",
+        "path": "zad2",
         "type": "path"
       }
     }

@@ -5,12 +5,12 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
 		zad1 = {
-			url = "path:./zad1";
+			url = "path:zad1";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
 		zad2 = {
-			url = "path:./zad2";
+			url = "path:zad2";
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
   };
