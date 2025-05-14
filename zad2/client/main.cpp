@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
       std::cout << "Usage:\n" << argv[0] << " [ip-address [port]]\n";
       return 0;
     }
-    address = argv[1];
+    address = arg1;
   }
   if (argc >= 3) {
     try {
