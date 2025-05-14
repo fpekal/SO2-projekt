@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
   while (running) {
     std::string message;
     std::getline(std::cin, message);
-    c.send(std::string{"<"} + nickname + "> " + message);
+    c.send(std::string{"<\e[0;36m"} + nickname + "\e[0m> " + message);
   }
 
   receiver_thread.join();
