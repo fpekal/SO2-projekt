@@ -132,7 +132,7 @@ Przykładowo:
 
 
 ### Klient
-Klient bierze jako argumenty adres ip i port serwera, z którym ma się połączyć
+Klient bierze jako argumenty adres ip i port serwera, z którym ma się połączyć.  
 `./client [adres-ip [port]]`  
 Domyślnie adres ip to `127.0.0.1`, a port to `2137`.
 
