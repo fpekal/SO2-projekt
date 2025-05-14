@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
   if (argc >= 2) {
     std::string arg1 = argv[1];
     if (arg1 == "--help" || arg1 == "-h") {
-      std::cout << "Usage:\n" << argv[0] << " [address [port]]\n";
+      std::cout << "Usage:\n" << argv[0] << " [ip-address [port]]\n";
       return 0;
     }
     address = argv[1];
