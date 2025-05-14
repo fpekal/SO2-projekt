@@ -32,7 +32,7 @@ public:
       : port{port}, address{address}, fd{0} {}
   ~Client() { close(fd); }
 
-  /** @fn void connect()
+  /** @fn void Client::connect()
    * @brief Connect to the server.
    *
    * Creates a socket `fd` and connects it to the server specified in the
@@ -53,7 +53,7 @@ public:
     }
   }
 
-  /** @fn void send(const std::string &message)
+  /** @fn void Client::send(const std::string &message)
    * @brief Send a message
    *
    * Sends a message.
@@ -65,7 +65,7 @@ public:
     ::send(fd, message.c_str(), message.length(), 0);
   }
 
-  /** @fn std::string receive()
+  /** @fn std::string Client::receive()
    * @brief Receive a message
    *
    * Blocks until new message appears from the server.
