@@ -19,7 +19,6 @@ public:
   ~Client() { close(fd); }
 
   void connect() {
-
     fd = socket(AF_INET, SOCK_STREAM, 0);
     assert(fd > 0);
 
