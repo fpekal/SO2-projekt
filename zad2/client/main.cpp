@@ -1,6 +1,7 @@
 #include <arpa/inet.h>
 #include <atomic>
 #include <cassert>
+#include <fcntl.h>
 #include <iostream>
 #include <netinet/in.h>
 #include <string>
@@ -75,16 +76,28 @@ public:
     std::vector<char> buffer;
     buffer.resize(2048);
 
+    // Set socket to non-blocking mode
+    int flags = fcntl(fd, F_GETFL, 0);
+    fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+
     while (true) {
       int num = ::recv(fd, buffer.data(), 2048, 0);
+
+      if (num == -1) {
+        if (errno == EWOULDBLOCK || errno == EAGAIN) {
+          // No data available yet, handle accordingly (e.g., sleep, select)
+          break;
+        } else {
+          return "";
+          // An actual error occurred
+          break;
+        }
+      }
 
       if (num <= 0)
         break;
 
       message.append(buffer.data(), num);
-
-      if (num < 2048)
-        break;
     }
 
     return message;
@@ -166,6 +179,12 @@ int main(int argc, char *argv[]) {
   while (running) {
     std::string message;
     std::getline(std::cin, message);
+
+    if (!std::cin.good()) {
+      running = false;
+      break;
+    }
+
     c.send(std::string{"["} + get_date() + "] " + std::string{"<\e[0;36m"} +
            nickname + "\e[0m> " + message);
   }
