@@ -82,7 +82,12 @@ int main(int argc, char *argv[]) {
     address = argv[1];
   }
   if (argc >= 3) {
-    port = std::stoi(argv[2]);
+    try {
+      port = std::stoi(argv[2]);
+    } catch (...) {
+      std::cerr << "Wrong arguments.\n";
+      return 1;
+    }
   }
   if (argc > 3) {
     std::cerr << "Too many arguments.\n";
