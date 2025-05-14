@@ -6,6 +6,7 @@
 #include <string>
 #include <sys/socket.h>
 #include <thread>
+#include <unistd.h>
 #include <vector>
 
 int DEFAULT_PORT = 2137;
@@ -15,6 +16,7 @@ class Client {
 public:
   Client(int port, const std::string &address)
       : port{port}, address{address}, fd{0} {}
+  ~Client() { close(fd); }
 
   void connect() {
 
