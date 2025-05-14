@@ -138,8 +138,9 @@ public:
    *
    * Initializes a `server` member with `Chat::client_handler`.
    */
-  Chat()
-      : server{std::bind(&Chat::client_handler, this, std::placeholders::_1)} {
+  Chat(const std::string &address, int port)
+      : server{std::bind(&Chat::client_handler, this, std::placeholders::_1),
+               address, port} {
     signal(SIGPIPE, SIG_IGN); // Make sure the process won't crash
   }
 

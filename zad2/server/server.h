@@ -1,7 +1,9 @@
 #pragma once
+#include <arpa/inet.h>
 #include <cassert>
 #include <functional>
 #include <netinet/in.h>
+#include <string>
 #include <sys/socket.h>
 #include <thread>
 #include <unistd.h>
@@ -25,7 +27,8 @@ public:
    * It takes an `int` argument that is an socket of a client. This function
    * should close the socket when returning.
    */
-  Server(std::function<void(int)> client_handler)
+  Server(std::function<void(int)> client_handler, const std::string &address,
+         int port)
       : client_handler{client_handler} {
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
     assert(server_fd != -1);
@@ -40,8 +43,9 @@ public:
     {
       sockaddr_in in;
       in.sin_family = AF_INET;
-      in.sin_addr.s_addr = htonl(INADDR_ANY);
-      in.sin_port = htons(2137);
+      // in.sin_addr.s_addr = htonl(INADDR_ANY);
+      inet_pton(AF_INET, address.c_str(), &in.sin_addr);
+      in.sin_port = htons(port);
       int ret = bind(server_fd, (sockaddr *)&in, sizeof(in));
       assert(ret != -1);
     }
