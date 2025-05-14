@@ -137,6 +137,9 @@ public:
    * @brief Construct a `Chat` object.
    *
    * Initializes a `server` member with `Chat::client_handler`.
+   *
+   * @param address Address on which the chat server will start listening.
+   * @param port Port to bind the chat server to.
    */
   Chat(const std::string &address, int port)
       : server{std::bind(&Chat::client_handler, this, std::placeholders::_1),

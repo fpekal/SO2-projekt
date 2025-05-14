@@ -12,7 +12,7 @@
 /** @class Server
  * @brief A TCP server
  *
- * Starts a TCP server that listens on port 2137. When a client connects its
+ * Starts a TCP server that listens on set port. When a client connects its
  * socket is handed to the `client_handler`, that will run on a separate thread.
  */
 class Server {
@@ -20,12 +20,14 @@ public:
   /**
    * @brief Setups a socket
    *
-   * Creates an INET socket, binds it to `0.0.0.0:2137` and starts listening
-   * for maximum of 127 clients.
+   * Creates an INET socket, binds it to e.g. `0.0.0.0:2137` and starts
+   * listening for maximum of 127 clients.
    *
    * @param client_handler Function responsible for communicating with a client.
    * It takes an `int` argument that is an socket of a client. This function
    * should close the socket when returning.
+   * @param address Address on which start listening.
+   * @param port Port to bind to.
    */
   Server(std::function<void(int)> client_handler, const std::string &address,
          int port)
