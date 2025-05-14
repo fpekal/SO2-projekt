@@ -103,6 +103,30 @@ static void receiver_thread_func(Client &c, std::atomic<bool> &running) {
   }
 }
 
+static std::string get_date() {
+  FILE *file = popen("date +'%H:%M:%S'", "r");
+
+  if (!file) {
+    return "Error: Could not execute date command.";
+  }
+
+  char buffer[128];
+  std::string result = "";
+
+  while (fgets(buffer, sizeof(buffer), file) != nullptr) {
+    result += buffer;
+  }
+
+  pclose(file);
+
+  // Remove trailing newline character
+  if (!result.empty() && result.back() == '\n') {
+    result.pop_back();
+  }
+
+  return result;
+}
+
 int main(int argc, char *argv[]) {
   int port = DEFAULT_PORT;
   std::string address = DEFAULT_ADDRESS;
@@ -142,7 +166,8 @@ int main(int argc, char *argv[]) {
   while (running) {
     std::string message;
     std::getline(std::cin, message);
-    c.send(std::string{"<\e[0;36m"} + nickname + "\e[0m> " + message);
+    c.send(std::string{"["} + get_date() + "] " + std::string{"<\e[0;36m"} +
+           nickname + "\e[0m> " + message);
   }
 
   receiver_thread.join();
