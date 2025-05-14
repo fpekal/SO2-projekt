@@ -73,6 +73,22 @@ int main(int argc, char *argv[]) {
   int port = DEFAULT_PORT;
   std::string address = DEFAULT_ADDRESS;
 
+  if (argc >= 2) {
+    std::string arg1 = argv[1];
+    if (arg1 == "--help" || arg1 == "-h") {
+      std::cout << "Usage:\n" << argv[0] << " [address [port]]\n";
+      return 0;
+    }
+    address = argv[1];
+  }
+  if (argc >= 3) {
+    port = std::stoi(argv[2]);
+  }
+  if (argc > 3) {
+    std::cerr << "Too many arguments.\n";
+    return 1;
+  }
+
   std::string nickname = "";
   std::cout << "Enter your nickname: ";
   std::getline(std::cin, nickname);
