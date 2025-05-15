@@ -29,7 +29,7 @@ public:
    * @param address IP address of the server.
    */
   Client(int port, const std::string &address)
-      : port{port}, address{address}, fd{0} {}
+      : address{address}, port{port}, fd{0} {}
   ~Client() { close(fd); }
 
   /** @fn void Client::connect()
@@ -104,10 +104,10 @@ public:
   }
 
 private:
-  int fd;
-
-  int port;
   std::string address;
+  int port;
+
+  int fd;
 };
 
 static void receiver_thread_func(Client &c, std::atomic<bool> &running) {
