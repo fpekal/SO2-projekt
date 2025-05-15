@@ -1,0 +1,15 @@
+name: Static Analysis
+on: [push, workflow_dispatch]
+jobs:
+  Compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - run: sudo apt -y install g++ make
+      - name: Compile
+        run: |
+          cd zad2/server
+          make
+          cd ../client
+          make
